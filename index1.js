@@ -197,6 +197,27 @@ document.addEventListener('DOMContentLoaded', function () {
       console.error("[DEBUG] Fetch error:", error);
       alert("Profile saved locally only. Server connection failed.");
     });
+
+    // send profile to Nessie (handled by nessie_postdata.py)
+    fetch('/save_profile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(profileData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log("[DEBUG] Profile also saved to Nessie:", data);
+      } else {
+        console.error("[DEBUG] Error saving profile to Nessie:", data);
+      }
+    })
+    .catch(error => {
+      console.error("[DEBUG] Fetch error (Nessie):", error);
+    });
+
   });
 
   // Load any existing profile
